@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="720.0" prefWidth="1080.0"
+	style="-fx-background-color: #2b1b17;"
+	xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+
+	<!-- Superior: Turno y Estado -->
+	<top>
+		<VBox alignment="CENTER" spacing="5.0">
+			<padding>
+				<Insets top="15.0" bottom="10.0" left="20.0" right="20.0" />
+			</padding>
+			<children>
+				<Label fx:id="lblTurno"
+					style="-fx-text-fill: #ffd700; -fx-font-size: 20px; -fx-font-weight: bold;"
+					text="Turno: Jugador 1" />
+				<Label fx:id="lblLanzamientos"
+					style="-fx-text-fill: #00ffcc; -fx-font-size: 14px;"
+					text="Tiros restantes: 2" />
+				<Label fx:id="lblFase"
+					style="-fx-text-fill: #a3e635; -fx-font-size: 14px;"
+					text="Fase: Primer Tiro" />
+			</children>
+		</VBox>
+	</top>
+
+	<!-- Lateral Derecho: VBox para el Contador de Puntos Global -->
+	<right>
+		<VBox fx:id="vboxContadorPuntos" alignment="TOP_CENTER"
+			spacing="10.0"
+			style="-fx-background-color: #1a110e; -fx-padding: 15px; -fx-border-color: #d4af37; -fx-border-width: 0px 0px 0px 2px;"
+			BorderPane.alignment="CENTER">
+			<children>
+				<Label
+					style="-fx-text-fill: #ffd700; -fx-font-weight: bold; -fx-font-size: 14px;"
+					text="MARCADOR" />
+				<!-- Aquí el controlador inyectará las etiquetas con los puntos de cada 
+					jugador -->
+			</children>
+		</VBox>
+	</right>
+
+	<!-- Centro: Dados y Cubilete -->
+	<center>
+		<VBox alignment="CENTER" spacing="20.0">
+			<children>
+				<!-- Dados -->
+				<HBox fx:id="contenedorDados" alignment="CENTER" spacing="15.0">
+					<children>
+						<ImageView fx:id="dado0" fitHeight="64.0"
+							fitWidth="64.0" onMouseClicked="#handleDadoClick"
+							pickOnBounds="true" preserveRatio="true" />
+						<ImageView fx:id="dado1" fitHeight="64.0"
+							fitWidth="64.0" onMouseClicked="#handleDadoClick"
+							pickOnBounds="true" preserveRatio="true" />
+						<ImageView fx:id="dado2" fitHeight="64.0"
+							fitWidth="64.0" onMouseClicked="#handleDadoClick"
+							pickOnBounds="true" preserveRatio="true" />
+						<ImageView fx:id="dado3" fitHeight="64.0"
+							fitWidth="64.0" onMouseClicked="#handleDadoClick"
+							pickOnBounds="true" preserveRatio="true" />
+						<ImageView fx:id="dado4" fitHeight="64.0"
+							fitWidth="64.0" onMouseClicked="#handleDadoClick"
+							pickOnBounds="true" preserveRatio="true" />
+					</children>
+				</HBox>
+
+				<!-- Cubilete -->
+				<ImageView fx:id="imgCubilete" fitHeight="130.0"
+					fitWidth="110.0" onMouseClicked="#handleCubileteClick"
+					pickOnBounds="true" preserveRatio="true" />
+			</children>
+		</VBox>
+	</center>
+
+	<!-- Inferior: Contenedor de Tableros -->
+	<bottom>
+		<HBox fx:id="contenedorTableros" alignment="CENTER"
+			spacing="20.0">
+			<padding>
+				<Insets top="10.0" bottom="20.0" left="20.0" right="20.0" />
+			</padding>
+		</HBox>
+	</bottom>
+
+</BorderPane>
