@@ -89,20 +89,31 @@ public class CachoController {
 	public void initialize() {
 
 	}
-	/*@FXML
+	@FXML
 	protected void onVolverAlMenu(ActionEvent evento) {
-		try {
-			if(juego!=null) juego = null;
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/menu.fxml"));
-			Parent root = loader.load();
-			
-			Stage stage = (Stage) ((Node) evento.getSource()).getScene().getWindow();
-			stage.setScene(new Scene(root));
-			stage.show();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	    try {
+	        // 1. Limpiamos referencias pesadas del juego actual
+	        if (juego != null) {
+	            juego = null; 
+	        }
+
+	        // 2. Cargamos el menú
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/menu.fxml"));
+	        Parent root = loader.load();
+	        
+	        Stage stage = (Stage) ((Node) evento.getSource()).getScene().getWindow();
+	        
+	        // 3. Forzamos a que la escena anterior pierda su raíz principal
+	        stage.getScene().setRoot(new Pane()); // Limpia la escena vieja de la memoria visual
+	        
+	        Scene scene = new Scene(root);
+	        stage.setScene(scene);
+	        //stage.setMaximized(true);
+	        stage.show();
+	        
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	/*
@@ -559,6 +570,8 @@ public class CachoController {
 	            240, 270, true, false
 	        );
 	        imgCubilete.setImage(imgCub);
+	        imgCubilete.setStyle("-fx-padding: 10 20 10 20;"
+	        		+ "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.2, 0.2, 0, 8);");
 	    } catch (Exception e) {
 	        System.out.println("Error al cargar la imagen del cubilete: " + e.getMessage());
 	    }
@@ -580,6 +593,8 @@ public class CachoController {
 						false
 						);
 				dadosUI[i].setImage(img); // Mantiene el estilo pixel art nítido
+				dadosUI[i].setStyle("-fx-padding: 10 20 10 20;"
+		        		+ "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.2, 0.2, 0, 8);");
 			} catch (Exception e) {
 				System.out.println(
 						"Error al cargar la imagen para el valor: " + valorDado + " en la ruta: " + rutaImagen);

@@ -6,29 +6,41 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
 
 <BorderPane prefHeight="720.0" prefWidth="1080.0"
-	style="-fx-background-color: #2b1b17;"
-	xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+	style="-fx-background-color: #2b1b17; -fx-background-image: url('/assets/background/mesa_pixelart_fondo_diapositivas.png');
+             -fx-background-size: cover;"
+	xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
 
 	<!-- Superior: Turno y Estado -->
 	<top>
-		<VBox alignment="CENTER" spacing="5.0">
+		<HBox alignment="CENTER_LEFT" spacing="20.0">
 			<padding>
 				<Insets top="15.0" bottom="10.0" left="20.0" right="20.0" />
 			</padding>
 			<children>
-				<Label fx:id="lblTurno"
-					style="-fx-text-fill: #ffd700; -fx-font-size: 20px; -fx-font-weight: bold;"
-					text="Turno: Jugador 1" />
-				<Label fx:id="lblLanzamientos"
-					style="-fx-text-fill: #00ffcc; -fx-font-size: 14px;"
-					text="Tiros restantes: 2" />
-				<Label fx:id="lblFase"
-					style="-fx-text-fill: #a3e635; -fx-font-size: 14px;"
-					text="Fase: Primer Tiro" />
+				<!-- Botón para volver al menú -->
+				<Button mnemonicParsing="false" onAction="#onVolverAlMenu"
+					style="-fx-background-color: #5a2727; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: #ff0000;"
+					text="&lt; Menú Principal" />
+
+				<!-- Contenedor central de turnos y estados -->
+				<VBox alignment="CENTER" spacing="5.0" HBox.hgrow="ALWAYS">
+					<children>
+						<Label fx:id="lblTurno"
+							style="-fx-text-fill: #ffd700; -fx-font-size: 20px; -fx-font-weight: bold;"
+							text="Turno: Jugador 1" />
+						<Label fx:id="lblLanzamientos"
+							style="-fx-text-fill: #00ffcc; -fx-font-size: 14px;"
+							text="Tiros restantes: 2" />
+						<Label fx:id="lblFase"
+							style="-fx-text-fill: #8bf03e; -fx-font-size: 14px;"
+							text="Fase: Primer Tiro" />
+					</children>
+				</VBox>
 			</children>
-		</VBox>
+		</HBox>
 	</top>
 
 	<!-- Lateral Derecho: VBox para el Contador de Puntos Global -->

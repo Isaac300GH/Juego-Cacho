@@ -73,12 +73,11 @@ public class JugadoresController {
 	    try {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/cacho.fxml"));
 	        
-	        // --- AQUÍ ESTÁ LA MAGIA DE LA HERENCIA Y EL FXML COMPARTIDO ---
 	        CachoController controller;
 	        if ("Tripleta".equals(modoSeleccionado)) {
-	            controller = new CachoTripletaController(); // Tu clase hija
+	            controller = new CachoTripletaController(); // Clase hija
 	        } else {
-	            controller = new CachoController(); // Tu clase base
+	            controller = new CachoController(); // Clase base
 	        }
 	        
 	        // Le inyectamos el controlador al loader antes de cargar el FXML
@@ -91,7 +90,7 @@ public class JugadoresController {
 	        
 	        Stage stage = (Stage) ((Node) evento.getSource()).getScene().getWindow();
 	        stage.setScene(new Scene(root));
-	        stage.setMaximized(true); // Opcional, por si quieres mantenerlo maximizado
+	        //stage.setMaximized(true);
 	        stage.show();
 	        
 	    } catch (IOException e) {

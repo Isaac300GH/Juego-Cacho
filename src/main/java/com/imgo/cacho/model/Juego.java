@@ -91,7 +91,10 @@ public class Juego {
 			return true;
 		}
 		int puntosCalculados = evaCacho.calcularPuntos();
-		if(puntosCalculados == 0) return tacharCasilla(nombre);
+		if(puntosCalculados == 0) {
+			tirosRestantes = 0;
+			return tacharCasilla(nombre);
+		}
 		boolean exito = jugadorActual.getTablero().anotaraCasilla(nombre, puntosCalculados, evaCacho.isMano());
 		if(exito) {
 			System.out.println(jugadorActual.getTablero().getPuntaje(nombre));

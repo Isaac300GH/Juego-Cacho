@@ -11,9 +11,9 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+        	
 			FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/fxml/menu.fxml"));
 			Scene scene = new Scene(fxmlloader.load(), 1080, 720);
-			
 			primaryStage.setTitle("Cachito");
 			primaryStage.setScene(scene);
 
