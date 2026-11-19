@@ -62,7 +62,13 @@ public class CachoController {
 	protected enum FaseTurno {
 		PRIMER_TIRO, SEGUNDO_TIRO_SELECCION, TERCER_TIRO_VOLTEAR
 	}
+	protected enum TiroVolteo {
+		PURO, HÍBRIDO, SIN_TIRO_VOLTEO
+	}
+	protected boolean juegoPuro;
+	protected boolean juegoDecidido;
 
+	protected TiroVolteo modoTiroVolteo = TiroVolteo.HÍBRIDO;
 	protected FaseTurno faseActual = FaseTurno.PRIMER_TIRO;
 	protected int volteosRealizadosEnTurno = 0; // Para llevar la cuenta del 1 obligatorio y 1 opcional
 
@@ -79,6 +85,8 @@ public class CachoController {
 		valoresDados = juego.getValores();
 		inicializarTablerosVisuales(nombresJugadores);
 		inicializarContador(nombresJugadores);
+		juegoPuro = false;
+		juegoDecidido = false;
 		imagenCubilete();
 		actualizarUI();
 	}
@@ -119,8 +127,7 @@ public class CachoController {
 	/*
 	 * ------------- Cubilete -------------
 	 */
-	@FXML
-	protected void handleCubileteClick(MouseEvent event) {
+	protected void handleCubileteClick() {
 		if (faseActual == FaseTurno.PRIMER_TIRO) {
 			// Primer tiro: Lanza todos
 			controlNumerico = true;
@@ -162,14 +169,14 @@ public class CachoController {
 	    // Cuando se cumple el tiempo de mantener presionado
 	    longPressTimer.setOnFinished(e -> {
 	        esLongPress[0] = true;
-	        if(obtenerIndicesSeleccionados().length == 0) {	        	
-	        	faseActual = FaseTurno.TERCER_TIRO_VOLTEAR;
-	        	controlNumerico = false;
-	        	ejecutarVolteoDado(index);
-	        	System.out.println(volteosRealizadosEnTurno);
-
-	        	iluminarCasillasValidas(valoresDados);
-				lblLanzamientos.setText("Tiros restantes: 0");
+	        if(obtenerIndicesSeleccionados().length == 0 && modoTiroVolteo != TiroVolteo.SIN_TIRO_VOLTEO) {	  
+	        	if(!juegoDecidido && juegoPuro) {
+	        		modoTiroVolteo = TiroVolteo.PURO;
+	        		imgCubilete.setStyle("-fx-padding: 10 20 10 20;"
+			        		+ "-fx-effect: dropshadow(gaussian, rgba(255,150,200,0.6), 30, 0.2, 0.2, 0, 8);");
+	        	}
+	        	juegoDecidido = true;
+	        	tiroVolteo(index);
 	        }
 	    });
 
@@ -184,26 +191,43 @@ public class CachoController {
 	        longPressTimer.stop();
 	        // Si lo soltó rápido (antes de los 600ms), actúa como un clic normal (anotar)
 	        if (!esLongPress[0]) {
-	        	if (faseActual == FaseTurno.SEGUNDO_TIRO_SELECCION) {
-	    			// Seleccionar/Deseleccionar para el segundo tiro
-	    			toggleSeleccionDado(index, dadoClickeado);
-	    			
+	        	if (faseActual == FaseTurno.SEGUNDO_TIRO_SELECCION ) {
+	        		if(!juegoDecidido && juegoPuro) {
+	        			modoTiroVolteo = TiroVolteo.SIN_TIRO_VOLTEO;
+	        			imgCubilete.setStyle("-fx-padding: 10 20 10 20;"
+				        		+ "-fx-effect: dropshadow(gaussian, rgba(150,255,200,0.6), 30, 0.2, 0.2, 0, 8);");
+	        		}
+	        		juegoDecidido = true;
+	        		// Seleccionar/Deseleccionar para el segundo tiro
+	        		if(modoTiroVolteo != TiroVolteo.PURO) toggleSeleccionDado(index, dadoClickeado);
+	        		else tiroVolteo(index);
 
-	    		} else if (faseActual == FaseTurno.TERCER_TIRO_VOLTEAR) {
+	    		}else if (faseActual == FaseTurno.TERCER_TIRO_VOLTEAR) {
 	    			// Fase de volteo: el usuario hace click en un dado para cambiar su valor
 	    			ejecutarVolteoDado(index);
 	    			System.out.println(volteosRealizadosEnTurno);
 	    			iluminarCasillasValidas(valoresDados);
 
-	    		}
+	    		} 
 	        }
 	    });
+	    
 
 	    // Si el mouse sale del botón mientras lo mantenía presionado, cancelamos
 	    dadoClickeado.setOnMouseExited(e -> {
 	        longPressTimer.stop();
 	    });
 		
+	}
+	protected void tiroVolteo(int index) {
+		
+    	faseActual = FaseTurno.TERCER_TIRO_VOLTEAR;
+    	controlNumerico = false;
+    	ejecutarVolteoDado(index);
+    	System.out.println(volteosRealizadosEnTurno);
+
+    	iluminarCasillasValidas(valoresDados);
+		lblLanzamientos.setText("Tiros restantes: 0");
 	}
 	protected void toggleSeleccionDado(int index, ImageView dadoUI) {
 		dadosSeleccionados[index] = !dadosSeleccionados[index];
@@ -572,6 +596,40 @@ public class CachoController {
 	        imgCubilete.setImage(imgCub);
 	        imgCubilete.setStyle("-fx-padding: 10 20 10 20;"
 	        		+ "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.2, 0.2, 0, 8);");
+	     // Temporizador para detectar el "mantener presionado" (Long Press)
+		    PauseTransition longPressTimer = new PauseTransition(Duration.millis(300)); 
+		    final boolean[] esLongPress = {false};
+
+		    // Cuando se cumple el tiempo de mantener presionado
+		    longPressTimer.setOnFinished(e -> {
+		        esLongPress[0] = true;
+		        if(faseActual == FaseTurno.PRIMER_TIRO && !juegoDecidido) {
+		        	imgCubilete.setStyle("-fx-padding: 10 20 10 20;"
+			        		+ "-fx-effect: dropshadow(gaussian, rgba(255,255,200,0.6), 20, 0.2, 0.2, 0, 8);");
+		        	juegoPuro = true;
+		        	handleCubileteClick();
+		        }
+		    });
+
+		    // Al presionar el botón, iniciamos el conteo
+		    imgCubilete.setOnMousePressed(e -> {
+		        esLongPress[0] = false;
+		        longPressTimer.playFromStart();
+		    });
+
+		    // Al soltar el botón
+		    imgCubilete.setOnMouseReleased(e -> {
+		        longPressTimer.stop();
+		        // Si lo soltó rápido (antes de los 600ms), actúa como un clic normal (anotar)
+		        if (!esLongPress[0]) {
+		        	handleCubileteClick();
+		        }
+		    });
+
+		    // Si el mouse sale del botón mientras lo mantenía presionado, cancelamos
+		    imgCubilete.setOnMouseExited(e -> {
+		        longPressTimer.stop();
+		    });
 	    } catch (Exception e) {
 	        System.out.println("Error al cargar la imagen del cubilete: " + e.getMessage());
 	    }
